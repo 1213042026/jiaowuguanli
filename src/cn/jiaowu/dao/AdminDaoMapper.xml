@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jiaowu.dao.AdminDao" >
+  <resultMap id="BaseResultMap" type="admin">
+  </resultMap>
+  <sql id="Base_Column_List" >
+    userId, userName, userPw,xingming
+  </sql>
+  
+    <update id="updateByPrimaryKeySelective" parameterType="admin" >
+    update t_admin
+    <set>
+       <if test="xingming != null and xingming != ''" >
+        xingming = #{xingming,jdbcType=VARCHAR},
+      </if>
+     </set>
+    where userId = #{userId,jdbcType=INTEGER}
+  </update>
+  
+   <select id="selectLogin" resultMap="BaseResultMap" parameterType="map">
+    SELECT
+    <include refid="Base_Column_List" />
+    from t_admin
+    where userName = #{userName}
+    and userPw = #{userPw}
+  </select>
+  
+  
+   <update id="updatePasswordByUsername" parameterType="map">
+    update t_admin
+    SET userPw = #{userPwNew}
+    where userName = #{userName}
+  </update>
+  
+  
+</mapper>

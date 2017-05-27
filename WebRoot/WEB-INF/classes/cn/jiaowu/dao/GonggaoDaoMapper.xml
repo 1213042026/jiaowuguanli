@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jiaowu.dao.GonggaoDao" >
+  <resultMap id="BaseResultMap" type="gonggao" >
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id,title,content,addtime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+     SELECT
+    <include refid="Base_Column_List"/>
+    from t_gonggao where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  delete from t_gonggao
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  
+  <insert id="insert" parameterType="gonggao" >
+    insert into t_gonggao (
+    	<include refid="Base_Column_List" />
+      )
+    values (null, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR},#{addtime,jdbcType=VARCHAR}) 
+  </insert>
+ 
+  <update id="updateByPrimaryKeySelective" parameterType="gonggao" >
+    update t_gonggao
+    <set>
+      <if test="title != null and title != ''" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+       <if test="content != null and content != ''" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="getAll" resultMap="BaseResultMap" >
+  select 
+    <include refid="Base_Column_List" />
+    from t_gonggao order by addtime desc
+  </select>
+
+</mapper>

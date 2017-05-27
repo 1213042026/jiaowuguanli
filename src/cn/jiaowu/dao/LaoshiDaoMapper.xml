@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jiaowu.dao.LaoshiDao" >
+  <resultMap id="BaseResultMap" type="laoshi">
+  </resultMap>
+  <sql id="Base_Column_List" >
+     id,bianhao,xingming,xingbie,nianling,loginpw,zhuanyeid,status,del
+  </sql>
+  
+    <insert id="insert" parameterType="laoshi" >
+    insert into t_laoshi (
+    	<include refid="Base_Column_List" />
+      )
+    values (null,#{bianhao,jdbcType=VARCHAR},#{xingming,jdbcType=VARCHAR},#{xingbie,jdbcType=VARCHAR},#{nianling,jdbcType=VARCHAR},#{loginpw,jdbcType=VARCHAR},#{zhuanyeid,jdbcType=INTEGER},1,0) 
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="laoshi" >
+    update t_laoshi
+    <set>
+     <if test="bianhao != null and bianhao != ''" >
+        bianhao = #{bianhao,jdbcType=VARCHAR},
+      </if>
+       <if test="xingming != null and xingming != ''" >
+        xingming = #{xingming,jdbcType=VARCHAR},
+      </if>
+       <if test="xingbie != null and xingbie != ''" >
+        xingbie = #{xingbie,jdbcType=VARCHAR},
+      </if>
+       <if test="nianling != null" >
+        nianling = #{nianling},
+      </if>
+       <if test="loginpw != null and loginpw != ''" >
+        loginpw = #{loginpw,jdbcType=VARCHAR},
+      </if>
+      <if test="zhuanyeid != null and zhuanyeid != -1" >
+        zhuanyeid = #{zhuanyeid},
+      </if>
+      </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="shenhe" parameterType="map">
+    update t_laoshi
+    SET status = 1
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+     SELECT
+     l.id,l.bianhao,l.xingming,l.xingbie,l.nianling,l.loginpw,l.zhuanyeid,l.status,l.del,z.mingcheng zymc
+     from t_laoshi l,t_zhuanye z where l.zhuanyeid=z.id and l.id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    update t_laoshi set del=1
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <select id="getAll" resultMap="BaseResultMap" parameterType="map"> 
+  	SELECT
+     l.id,l.bianhao,l.xingming,l.xingbie,l.nianling,l.loginpw,l.zhuanyeid,l.status,l.del,z.mingcheng zymc
+     from t_laoshi l,t_zhuanye z where l.zhuanyeid=z.id and l.del = 0
+      <if test="bianhao != null and bianhao!=''" >
+        and l.bianhao like '%${bianhao}%' 
+     </if>
+     <if test="zhuanyeid != null and zhuanyeid!=''" >
+       and l.zhuanyeid = #{zhuanyeid}
+     </if>
+  </select>
+  
+  
+   <select id="selectLogin" resultMap="BaseResultMap" parameterType="map">
+    SELECT
+    <include refid="Base_Column_List" />
+    from t_laoshi
+    where del=0 and status=1 and bianhao = #{userName}
+    and loginpw = #{userPw}
+  </select>
+  
+  
+   <update id="updatePasswordByUsername" parameterType="map">
+    update t_laoshi
+    SET loginpw = #{userPwNew}
+    where bianhao = #{bianhao}
+  </update>
+  
+   <select id="isExists" resultType="java.lang.Integer">
+    SELECT
+    count(*)
+    from t_laoshi where del=0
+    and bianhao = #{bianhao}
+  </select>
+  
+</mapper>

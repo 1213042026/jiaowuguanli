@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>springmvc</display-name>
+   <!-- 指定Spring配置文件路径 -->
+  <context-param>
+  	<param-name>contextConfigLocation</param-name>
+  	<param-value>classpath:applicationContext.xml</param-value>
+  </context-param>
+  
+  <!-- Spring和进行集成 监听器  /WEB-INF -->
+  <listener>
+  	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  
+  <!-- 配置一个处理乱码的过滤器 -->
+  <filter>
+  	<filter-name>characterEncoding</filter-name>
+  	<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+  	<init-param>
+  		<param-name>encoding</param-name>
+  		<param-value>UTF-8</param-value>
+  	</init-param>
+  </filter>
+  <filter-mapping>
+  	<filter-name>characterEncoding</filter-name>
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  <!-- 第1步：导入Springjar，第2步，编写核心控制器 -->
+  <servlet>
+  	<servlet-name>mymvc</servlet-name>
+  	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  	<init-param>
+  		<param-name>contextConfigLocation</param-name>
+  		<param-value>classpath:springMVC.xml</param-value>
+  	</init-param> 
+  	<load-on-startup>0</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>mymvc</servlet-name>
+  	<url-pattern>/</url-pattern>
+  </servlet-mapping>
+  <!-- 
+  	url-pattern有5种配置模式：
+	（1）/xxx:完全匹配/xxx的路径
+	（2）/xxx/*:匹配以/xxx开头的路径，请求中必须包含xxx。
+	（3）/*：匹配/下的所有路径,请求可以进入到action或controller，但是转发jsp时再次被拦截，不能访问jsp界面。
+	（4）.xx:匹配以xx结尾的路径，所有请求必须以.xx结尾，但不会影响访问静态文件。
+	（5）/:默认模式，未被匹配的路径都将映射到此servlet，对jpg，js，css等静态文件也将被拦截，不能访问。
+   -->
+   
+   
+   
+  <welcome-file-list>
+    <welcome-file>login.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>

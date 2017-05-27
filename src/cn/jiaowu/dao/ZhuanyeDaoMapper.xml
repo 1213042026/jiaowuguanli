@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jiaowu.dao.ZhuanyeDao" >
+  <resultMap id="BaseResultMap" type="zhuanye" >
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id,mingcheng,del
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+     SELECT
+    <include refid="Base_Column_List"/>
+    from t_zhuanye where del=0 and id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    update t_zhuanye set del=1
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  
+  <insert id="insert" parameterType="zhuanye" >
+    insert into t_zhuanye (
+    	<include refid="Base_Column_List" />
+      )
+    values (null, #{mingcheng,jdbcType=VARCHAR}, 0) 
+  </insert>
+ 
+  <update id="updateByPrimaryKeySelective" parameterType="zhuanye" >
+    update t_zhuanye
+    <set>
+      <if test="mingcheng != null and mingcheng != ''" >
+        mingcheng = #{mingcheng,jdbcType=VARCHAR},
+      </if>
+      <if test="del != null" >
+        del = #{del,jdbcType=VARCHAR},
+      </if>
+      </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="getAll" resultMap="BaseResultMap" >
+  select 
+    <include refid="Base_Column_List" />
+    from t_zhuanye where del=0
+  </select>
+
+</mapper>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jiaowu.dao.XueshengDao" >
+  <resultMap id="BaseResultMap" type="xuesheng">
+  </resultMap>
+  <sql id="Base_Column_List" >
+     id,zhuanyeid,xuehao,xingming,xingbie,nianling,loginpw,status,del
+  </sql>
+  
+    <insert id="insert" parameterType="xuesheng" >
+    insert into t_xuesheng (
+    	<include refid="Base_Column_List" />
+      )
+    values (null,#{zhuanyeid,jdbcType=INTEGER},#{xuehao,jdbcType=VARCHAR},#{xingming,jdbcType=VARCHAR},#{xingbie,jdbcType=VARCHAR},#{nianling,jdbcType=VARCHAR},#{loginpw,jdbcType=VARCHAR},1,0) 
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="xuesheng" >
+    update t_xuesheng
+    <set>
+     <if test="zhuanyeid != null" >
+        zhuanyeid = #{zhuanyeid,jdbcType=INTEGER},
+      </if>
+     <if test="xuehao != null and xuehao != ''" >
+        xuehao = #{xuehao,jdbcType=VARCHAR},
+      </if>
+       <if test="xingming != null and xingming != ''" >
+        xingming = #{xingming,jdbcType=VARCHAR},
+      </if>
+       <if test="xingbie != null and xingbie != ''" >
+        xingbie = #{xingbie,jdbcType=VARCHAR},
+      </if>
+       <if test="nianling != null" >
+        nianling = #{nianling},
+      </if>
+       <if test="loginpw != null and loginpw != ''" >
+        loginpw = #{loginpw,jdbcType=VARCHAR},
+      </if>
+      </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="shenhe" parameterType="map">
+    update t_xuesheng
+    SET status = 1
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+     SELECT
+     l.id,l.zhuanyeid,l.xuehao,l.xingming,l.xingbie,l.nianling,l.loginpw,l.status,l.del,z.mingcheng zymc
+     from t_xuesheng l,t_zhuanye z where l.zhuanyeid=z.id and l.id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    update t_xuesheng set del=1
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <select id="getAll" resultMap="BaseResultMap" > 
+  	SELECT
+     l.id,l.zhuanyeid,l.xuehao,l.xingming,l.xingbie,l.nianling,l.loginpw,l.status,l.del,z.mingcheng zymc
+     from t_xuesheng l,t_zhuanye z where l.zhuanyeid=z.id and l.del = 0
+      <if test="xuehao != null and xuehao!=''" >
+        and l.xuehao like '%${xuehao}%' 
+     </if>
+     <if test="zhuanyeid != null and zhuanyeid!=''" >
+       and l.zhuanyeid = #{zhuanyeid}
+     </if>
+  </select>
+  
+  
+  
+   <select id="selectLogin" resultMap="BaseResultMap" parameterType="map">
+    SELECT
+    <include refid="Base_Column_List" />
+    from t_xuesheng
+    where del=0 and status=1 and xuehao = #{userName}
+    and loginpw = #{userPw}
+  </select>
+  
+  
+   <update id="updatePasswordByUsername" parameterType="map">
+    update t_xuesheng
+    SET loginpw = #{userPwNew}
+    where xuehao = #{xuehao}
+  </update>
+  
+   <select id="isExists" resultType="java.lang.Integer">
+    SELECT
+    count(*)
+    from t_xuesheng where del=0
+    and xuehao = #{xuehao}
+  </select>
+  
+</mapper>
